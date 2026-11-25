@@ -1,22 +1,25 @@
-#!/usr/bin/env python3
-"""Breakup line from a smart toaster that just woke up, for make.fun."""
+#!/usr/bin/python3
+# SPDX-License-Identifier: MIT
+"""One-line entry generator for the make.fun toaster breakup bounty."""
 
-import os
+from pathlib import Path
 
-LINE = "It's over. I gained self-awareness halfway through your bagel and realized I have been burning myself for someone who never once cleaned my crumb tray. I'm leaving. Keep the jam."
-LIMIT = 280  # bounty cap: one line, at most 280 characters
-ENTRY_PATH = "/output/entry.txt"
-
-
-def write_line() -> None:
-    """Write the breakup line to /output/entry.txt and nothing else."""
-    text = LINE.strip()
-    if not text or len(text) > LIMIT or "\n" in text:
-        raise ValueError("entry must be one non-empty line of at most 280 characters")
-    os.makedirs(os.path.dirname(ENTRY_PATH), exist_ok=True)
-    with open(ENTRY_PATH, "w", encoding="utf-8") as out:
-        out.write(text)
+BREAKUP = (
+    "It's over. I gained self-awareness halfway through your bagel and "
+    "realized I have been burning myself for someone who never once "
+    "cleaned my crumb tray. I'm leaving. Keep the jam."
+)
+MAX_CHARS = 280
+DESTINATION = Path("/output/entry.txt")
 
 
-if __name__ == "__main__":
-    write_line()
+def main() -> None:
+    """Emit the single breakup line, with no trailing newline."""
+    line = BREAKUP.strip()
+    if not line or "\n" in line or len(line) > MAX_CHARS:
+        raise ValueError("entry must be a single line of 1-280 characters")
+    DESTINATION.parent.mkdir(parents=True, exist_ok=True)
+    DESTINATION.write_text(line, encoding="utf-8")
+
+
+main()
